@@ -8,6 +8,7 @@ import os
 import sys
 import tabulate
 import json
+from github import GithubException
 
 token = os.environ["GITHUB_TOKEN"]
 
@@ -36,25 +37,25 @@ class NXP_Zephyr:
         '''
             update team members
         '''
-        org = _gh.get_organization("nxp-zephyr")
-        #fixme no access for integartion, has to hard code here
-        try:
-            teams = org.get_teams()
-            for _t in teams:
-                if _t.name == team_slug:
-                    for _m in _t.get_members():
-                        print(_m.login)
-                        self.NXP_Zephyr_Team.insert(_m.login)
-        except Exception as _e:
-            print(f"{_e}")
-            print("fallback to hardcode version")
-            self.NXP_Zephyr_Team += [ "manuargue", "hakehuang", "butok", "MrVan", "lylezhu2014",
-                "vakulgarg", "yvanderv", "Ursescu", "stanislav-poboril", "mmahadevan108",
-                "JiafeiPan", "dleach02", "Albort12138", "danieldegrasse", "laurenpost",
-                "agansari", "MarkWangChinese", "George-Stefan", "alexandru-porosanu-nxp",
-                "Dat-NguyenDuy", "nxp-wayne", "Zhiqiang-Hou", "Lucien-Zhao", "congnguyenhuu",
-                "saurabh-nxp", "DerekSnell", "fgoucemnxp", "sviaunxp", "NeilChen93", "ChayGuo",
-                "EmilioCBen", "quangbuitrong", "decsny", "yeaissa", "fengming-ye", "Radimli"]
+        # org = _gh.get_organization("nxp-zephyr")
+        # #fixme no access for integartion, has to hard code here
+        # try:
+            # teams = org.get_teams()
+            # for _t in teams:
+                # if _t.name == team_slug:
+                    # for _m in _t.get_members():
+                        # print(_m.login)
+                        # self.NXP_Zephyr_Team.insert(_m.login)
+        # except Exception as _e:
+            # print(f"{_e}")
+            # print("fallback to hardcode version")
+        self.NXP_Zephyr_Team += [ "manuargue", "hakehuang", "butok", "MrVan", "lylezhu2014",
+            "vakulgarg", "yvanderv", "Ursescu", "stanislav-poboril", "mmahadevan108",
+            "JiafeiPan", "dleach02", "Albort12138", "danieldegrasse", "laurenpost",
+            "agansari", "MarkWangChinese", "George-Stefan", "alexandru-porosanu-nxp",
+            "Dat-NguyenDuy", "nxp-wayne", "Zhiqiang-Hou", "Lucien-Zhao", "congnguyenhuu",
+            "saurabh-nxp", "DerekSnell", "fgoucemnxp", "sviaunxp", "NeilChen93", "ChayGuo",
+            "EmilioCBen", "quangbuitrong", "decsny", "yeaissa", "fengming-ye", "Radimli"]
 
         print(f"NXP_Zephyr: {self.NXP_Zephyr_Team}")
 
@@ -228,21 +229,26 @@ def main(argv):
     else:
         ignore_milestones = []
 
-    query = f"is:pr is:open repo:{args.org}/{args.repo} review:approved status:success -label:DNM draft:false"
-    pr_issues = gh.search_issues(query=query)
-    for issue in pr_issues:
-        if issue.milestone and issue.milestone.title in ignore_milestones:
-            print(f"ignoring: {number} milestone={issue.milestone.title}")
-            continue
+    for user in nxp.NXP_Zephyr_Team:
+        query = f"is:pr is:open repo:{args.org}/{args.repo} author:{user}"
+        print(query)
+        
+        try:
+            pr_issues = gh.search_issues(query=query)
+            for issue in pr_issues:
+                if issue.milestone and issue.milestone.title in ignore_milestones:
+                    print(f"ignoring: {number} milestone={issue.milestone.title}")
+                    continue
 
-        number = issue.number
-        print(f"fetch: {number}")
-        pr = issue.as_pull_request()
-        if pr.user.login not in nxp.NXP_Zephyr_Team:
-            print(f"skip non-NXP author {pr.user.login}")
+                number = issue.number
+                print(f"fetch: {number}")
+                pr = issue.as_pull_request()
+                pr_data[number] = PRData(issue=issue, pr=pr)
+        except Exception as e:
+            if e.status== 422:
+                print("Can't fetch {user}! Is account private?")
             continue
-        pr_data[number] = PRData(issue=issue, pr=pr)
-
+    
     for number, data in pr_data.items():
         evaluate_criteria(number, data)
 
