@@ -33,6 +33,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mkdir public
+          pwd
           ./nxp_pr_queue.py
 
       - name: Setup pages
