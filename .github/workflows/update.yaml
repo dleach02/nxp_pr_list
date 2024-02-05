@@ -1,0 +1,55 @@
+name: Update and publish
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions: read-all
+    steps:
+      - name: Install Python dependencies
+        run: pip3 install -U PyGithub tabulate
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir public
+          ./merge_queue.py
+
+      - name: Setup pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
