@@ -34,7 +34,7 @@ jobs:
         run: |
           mkdir public
           pwd
-          ls
+          ls -l
           ./nxp_pr_queue.py
 
       - name: Setup pages
