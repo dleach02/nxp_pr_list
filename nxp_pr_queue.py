@@ -101,14 +101,14 @@ def evaluate_criteria(number, data):
     mergeable = pr.mergeable
     hotfix = "Hotfix" in labels
     trivial = "Trivial" in labels
-    change_req = False
+    change_request = False
 
     approvers = set()
     for review in data.pr.get_reviews():
         if review.user and review.state == 'APPROVED':
             approvers.add(review.user.login)
         if review.state == 'CHANGES_REQUESTED':
-            change_req = True
+            change_request = True
 
     assignee_approved = False
 
@@ -144,11 +144,11 @@ def evaluate_criteria(number, data):
     data.mergeable = mergeable
     data.hotfix = hotfix
     data.trivial = trivial
-    data.change_req = change_req
+    data.change_request = change_request
 
     data.debug = [number, author, assignees, approvers, delta_hours,
                   delta_biz_hours, time_left, mergeable, hotfix, trivial, 
-                  change_req]
+                  change_request]
 
 
 def table_entry(number, data):
