@@ -69,6 +69,7 @@ class PRData:
     mergeable: bool = field(default=False)
     hotfix: bool = field(default=False)
     trivial: bool = field(default=False)
+    change_request: bool = field(default=False)
     debug: list = field(default=None)
 
 
@@ -100,11 +101,14 @@ def evaluate_criteria(number, data):
     mergeable = pr.mergeable
     hotfix = "Hotfix" in labels
     trivial = "Trivial" in labels
+    change_req = False
 
     approvers = set()
     for review in data.pr.get_reviews():
         if review.user and review.state == 'APPROVED':
             approvers.add(review.user.login)
+        if review.state == 'CHANGES_REQUESTED':
+            change_req = True
 
     assignee_approved = False
 
@@ -140,9 +144,11 @@ def evaluate_criteria(number, data):
     data.mergeable = mergeable
     data.hotfix = hotfix
     data.trivial = trivial
+    data.change_req = change_req
 
     data.debug = [number, author, assignees, approvers, delta_hours,
-                  delta_biz_hours, time_left, mergeable, hotfix, trivial]
+                  delta_biz_hours, time_left, mergeable, hotfix, trivial, 
+                  change_req]
 
 
 def table_entry(number, data):
@@ -178,6 +184,8 @@ def table_entry(number, data):
         tags.append("H")
     if data.trivial:
         tags.append("T")
+    if data.change_request:
+        tags.append("C")
     tags_text = ' '.join(tags)
 
     return f"""
@@ -246,7 +254,7 @@ def main(argv):
                 pr_data[number] = PRData(issue=issue, pr=pr)
         except Exception as e:
             if e.status== 422:
-                print("Can't fetch {user}! Is account private?")
+                print(f"Can't fetch {user}! Is account private?")
             continue
     
     for number, data in pr_data.items():
@@ -259,7 +267,7 @@ def main(argv):
 
     debug_headers = ["number", "author", "assignees", "approvers",
                      "delta_hours", "delta_biz_hours", "time_left", "Mergeable",
-                     "Hotfix", "Trivial"]
+                     "Hotfix", "Trivial", "Change"]
     debug_data = []
     for _, data in pr_data.items():
         debug_data.append(data.debug)
