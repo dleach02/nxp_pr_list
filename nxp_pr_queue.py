@@ -176,6 +176,8 @@ def table_entry(number, data):
 
     if data.mergeable and data.assignee and data.time:
         tr_class = ""
+    else if data.change_request:
+        tr_class = "change"
     else:
         tr_class = "draft"
 

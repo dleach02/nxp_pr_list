@@ -104,6 +104,12 @@ a.blocked {
 	font-style: italic;
 	opacity: 0.5;
 }
+
+.prs tr.change {
+	font-style: bold;
+	color: #992626
+}
+
 </style>
 
 <script type="text/javascript">
