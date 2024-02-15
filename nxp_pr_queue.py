@@ -56,7 +56,7 @@ class NXP_Zephyr:
             "Dat-NguyenDuy", "nxp-wayne", "Zhiqiang-Hou", "Lucien-Zhao", "congnguyenhuu",
             "saurabh-nxp", "DerekSnell", "fgoucemnxp", "sviaunxp", "NeilChen93", "ChayGuo",
             "EmilioCBen", "quangbuitrong", "decsny", "yeaissa", "fengming-ye", "Radimli",
-            "sumitbatra-nxp", "PetervdPerk-NXP", "bperseghetti", "igalloway"]
+            "sumitbatra-nxp", "PetervdPerk-NXP", "bperseghetti", "igalloway", "mayankmahajan-nxp"]
 
         print(f"NXP_Zephyr: {self.NXP_Zephyr_Team}")
 
