@@ -49,14 +49,55 @@ class NXP_Zephyr:
         # except Exception as _e:
             # print(f"{_e}")
             # print("fallback to hardcode version")
-        self.NXP_Zephyr_Team += [ "manuargue", "hakehuang", "butok", "MrVan", "lylezhu2014",
-            "vakulgarg", "yvanderv", "Ursescu", "stanislav-poboril", "mmahadevan108",
-            "JiafeiPan", "dleach02", "Albort12138", "danieldegrasse", "laurenpost",
-            "agansari", "MarkWangChinese", "George-Stefan", "alexandru-porosanu-nxp",
-            "Dat-NguyenDuy", "nxp-wayne", "Zhiqiang-Hou", "Lucien-Zhao", "congnguyenhuu",
-            "saurabh-nxp", "DerekSnell", "fgoucemnxp", "sviaunxp", "NeilChen93", "ChayGuo",
-            "EmilioCBen", "quangbuitrong", "decsny", "yeaissa", "fengming-ye", "Radimli",
-            "sumitbatra-nxp", "PetervdPerk-NXP", "bperseghetti", "igalloway", "mayankmahajan-nxp"]
+        self.NXP_Zephyr_Team += [ 
+            "dbaluta", 
+            "manuargue", 
+            "hakehuang", 
+            "butok", 
+            "MrVan", 
+            "ngphibang", 
+            "yvanderv", 
+            "stanislav-poboril", 
+            "mmahadevan108", 
+            "JiafeiPan", 
+            "dleach02", 
+            "zejiang0jason", 
+            "Albort12138", 
+            "danieldegrasse", 
+            "MarkWangChinese", 
+            "George-Stefan", 
+            "alexandru-porosanu-nxp", 
+            "Dat-NguyenDuy", 
+            "nxp-wayne", 
+            "Zhiqiang-Hou", 
+            "iuliana-prodan", 
+            "congnguyenhuu",
+            "saurabh-nxp", 
+            "DerekSnell", 
+            "fgoucemnxp", 
+            "sviaunxp", 
+            "EmilioCBen", 
+            "quangbuitrong", 
+            "decsny", 
+            "yeaissa", 
+            "SuperHeroAbner",
+            "ZhaoxiangJin",
+            "fengming-ye", 
+            "Radimli",
+            "JesseSamuel",
+            "anjay-yadav-nxp",
+            "gangli02",
+            "NXP-Liam-Li",
+            "william-tang914",
+            "trunghieulenxp",
+            #
+            # These were on the old list but don't currently show up in the new nxp-upstream list.
+            # Probably because they are submitting from their own private repository (bad)
+            #
+            "lylezhu2014", "vakulgarg", "Ursescu", "laurenpost",
+            "agansari", "Lucien-Zhao", "NeilChen93", "ChayGuo",
+            "sumitbatra-nxp", "PetervdPerk-NXP", "bperseghetti", 
+            "igalloway", "mayankmahajan-nxp"]
 
         print(f"NXP_Zephyr: {self.NXP_Zephyr_Team}")
 
