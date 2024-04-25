@@ -94,7 +94,7 @@ class NXP_Zephyr:
             # These were on the old list but don't currently show up in the new nxp-upstream list.
             # Probably because they are submitting from their own private repository (bad)
             #
-            "lylezhu2014", "vakulgarg", "Ursescu", "laurenpost",
+            "lylezhu2012", "vakulgarg", "Ursescu", "laurenpost",
             "agansari", "Lucien-Zhao", "NeilChen93", "ChayGuo",
             "sumitbatra-nxp", "PetervdPerk-NXP", "bperseghetti", 
             "igalloway", "mayankmahajan-nxp"]
