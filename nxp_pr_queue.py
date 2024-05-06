@@ -49,7 +49,7 @@ class NXP_Zephyr:
         # except Exception as _e:
             # print(f"{_e}")
             # print("fallback to hardcode version")
-        self.NXP_Zephyr_Team += [ 
+        self.NXP_Zephyr_Team += sorted([ 
             "dbaluta", 
             "manuargue", 
             "hakehuang", 
@@ -97,7 +97,7 @@ class NXP_Zephyr:
             "lylezhu2012", "vakulgarg", "Ursescu", "laurenpost",
             "agansari", "Lucien-Zhao", "NeilChen93", "ChayGuo",
             "sumitbatra-nxp", "PetervdPerk-NXP", "bperseghetti", 
-            "igalloway", "mayankmahajan-nxp", "TomasGalbickaNXP"]
+            "igalloway", "mayankmahajan-nxp", "TomasGalbickaNXP"])
 
         print(f"NXP_Zephyr: {self.NXP_Zephyr_Team}")
 
