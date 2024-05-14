@@ -1,5 +1,17 @@
 #!/usr/bin/env python3
 
+#
+# Originally sourced from work by Fabio Baltieri <fabiobaltieri@google.com>. 
+# Modified to only show NXP developers.
+#
+# The work is now part of Zephyr Project here: 
+# https://github.com/zephyrproject-rtos/zephyr-merge-list
+#
+# Copyright 2024 Google LLC
+# Copyright 2024 NXP
+# SPDX-License-Identifier: Apache-2.0
+
+
 from dataclasses import dataclass, field
 import argparse
 import datetime
@@ -202,8 +214,11 @@ def table_entry(number, data):
 
     approvers_set = set()
     for review in data.pr.get_reviews():
-        if review.user and review.state == 'APPROVED':
-            approvers_set.add(review.user.login)
+        if review.user:
+            if review.state == 'APPROVED':
+                approvers_set.add(review.user.login)
+            elif review.state in ['DISMISSED', 'CHANGES_REQUESTED']:
+                approvers_set.discard(review.user.login)
     approvers = ', '.join(sorted(approvers_set))
 
     base = pr.base.ref
