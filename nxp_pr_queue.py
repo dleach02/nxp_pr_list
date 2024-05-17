@@ -110,7 +110,8 @@ class NXP_Zephyr:
             "agansari", "Lucien-Zhao", "NeilChen93", "ChayGuo",
             "sumitbatra-nxp", "PetervdPerk-NXP", "bperseghetti", 
             "igalloway", "mayankmahajan-nxp", "TomasGalbickaNXP",
-            "ankeXiao", "CZKikin", "CherQin", "0xFarahFl"], key=lambda x: x.lower())
+            "ankeXiao", "CZKikin", "CherQin", "0xFarahFl", 
+            "Rex-Chen-NXP", "MaochenWang1"], key=lambda x: x.lower())
 
         print(f"NXP_Zephyr: {self.NXP_Zephyr_Team}")
 
