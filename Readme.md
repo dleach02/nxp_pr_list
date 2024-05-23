@@ -22,5 +22,5 @@ choose 'Github Actions' in pull downlist
 ## Todo:
 --------
 
-add sync with https://github.com/orgs/nxp-zephyr/teams/nxp-zephyr-write members
+add sync with https://github.com/orgs/nxp-upstream/teams/nxp-zephyr-write members
 

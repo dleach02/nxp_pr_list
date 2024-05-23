@@ -160,12 +160,22 @@ def evaluate_criteria(number, data):
     change_request = False
 
     approvers = set()
+    changes = set()
     for review in data.pr.get_reviews():
-        if review.user and review.state == 'APPROVED':
-            approvers.add(review.user.login)
-        if review.state == 'CHANGES_REQUESTED':
-            change_request = True
+        if review.user:
+            if review.state == 'APPROVED':
+                approvers.add(review.user.login)
+                changes.discard(review.user.login)
+            elif review.state == 'CHANGES_REQUESTED':
+                approvers.discard(review.user.login)
+                changes.add(review.user.login)
+            elif review.state == 'DISMISSED':
+                approvers.discard(review.user.login)
+                changes.discard(review.user.login)
 
+    if changes:
+        change_request = True
+        
     assignee_approved = False
 
     if (hotfix or
@@ -265,6 +275,52 @@ def table_entry(number, data):
         </tr>
         """
 
+def repo_entry(repo_name):
+    return f"""
+        <tr>
+            <th></th>
+            <th colspan="10">{repo_name}</th>
+        </tr>
+        """
+
+def query_repo(gh, nxp, org, repo, ignore_milestones):
+    pr_data = {}
+
+    for user in nxp.NXP_Zephyr_Team:
+        query = f"is:pr is:open repo:{org}/{repo} author:{user}"
+        print(query)
+        
+        try:
+            pr_issues = gh.search_issues(query=query)
+            for issue in pr_issues:
+                if issue.milestone and issue.milestone.title in ignore_milestones:
+                    print(f"ignoring: {number} milestone={issue.milestone.title}")
+                    continue
+
+                number = issue.number
+                print(f"fetch: {number}")
+                pr = issue.as_pull_request()
+                pr_data[number] = PRData(issue=issue, pr=pr)
+        except Exception as e:
+            if e.status== 422:
+                print(f"Can't fetch {user}! Is account private?")
+            continue
+
+    print(f"Evaluate {repo} PR list")
+    for number, data in pr_data.items():
+        evaluate_criteria(number, data)
+
+    debug_headers = ["number", "author", "assignees", "approvers",
+                     "delta_hours", "delta_biz_hours", "time_left", "Mergeable",
+                     "Hotfix", "Trivial", "Change"]
+    debug_data = []
+    for _, data in pr_data.items():
+        debug_data.append(data.debug)
+    print(tabulate.tabulate(debug_data, headers=debug_headers))
+
+
+    return pr_data
+
 
 def parse_args(argv):
     parser = argparse.ArgumentParser(description=__doc__)
@@ -273,7 +329,7 @@ def parse_args(argv):
                         help="Github organisation")
     parser.add_argument("-r", "--repo", default="zephyr",
                         help="Github repository")
-    parser.add_argument("-i", "--ignore-milestones", default="future,v3.7.0",
+    parser.add_argument("-i", "--ignore-milestones", default="",
                         help="Comma separated list of milestones to ignore")
 
     return parser.parse_args(argv)
@@ -297,45 +353,25 @@ def main(argv):
         print(f"ignored milestones: {ignore_milestones}")
     else:
         ignore_milestones = []
-
-    for user in nxp.NXP_Zephyr_Team:
-        query = f"is:pr is:open repo:{args.org}/{args.repo} author:{user}"
-        print(query)
         
-        try:
-            pr_issues = gh.search_issues(query=query)
-            for issue in pr_issues:
-                if issue.milestone and issue.milestone.title in ignore_milestones:
-                    print(f"ignoring: {number} milestone={issue.milestone.title}")
-                    continue
-
-                number = issue.number
-                print(f"fetch: {number}")
-                pr = issue.as_pull_request()
-                pr_data[number] = PRData(issue=issue, pr=pr)
-        except Exception as e:
-            if e.status== 422:
-                print(f"Can't fetch {user}! Is account private?")
-            continue
-    
-    for number, data in pr_data.items():
-        evaluate_criteria(number, data)
-
+        
     with open(HTML_PRE) as f:
         html_out = f.read()
         timestamp = datetime.datetime.now(UTC).strftime("%d/%m/%Y %H:%M:%S %Z")
         html_out = html_out.replace("UPDATE_TIMESTAMP", timestamp)
 
-    debug_headers = ["number", "author", "assignees", "approvers",
-                     "delta_hours", "delta_biz_hours", "time_left", "Mergeable",
-                     "Hotfix", "Trivial", "Change"]
-    debug_data = []
-    for _, data in pr_data.items():
-        debug_data.append(data.debug)
-    print(tabulate.tabulate(debug_data, headers=debug_headers))
+    repo_list = ["zephyr", "hal_nxp", "hostap", "mbedtls", "mcuboot", "trusted-firmware-m", "tf-m-tests", "lvgl", "west" ]
 
-    for number, data in pr_data.items():
-        html_out += table_entry(number, data)
+    for repo in repo_list:
+        print(f"Processing repo {repo}")
+        pr_data = query_repo(gh, nxp, args.org, repo, ignore_milestones)
+        
+        if pr_data:
+            html_out += repo_entry(repo)
+            for number, data in pr_data.items():
+                html_out += table_entry(number, data)
+
+        pr_data = query_repo(gh, nxp, args.org, "hostap", ignore_milestones)
 
     with open(HTML_POST) as f:
         html_out += f.read()
