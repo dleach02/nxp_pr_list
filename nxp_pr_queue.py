@@ -20,6 +20,7 @@ import os
 import sys
 import tabulate
 import json
+import re
 from github import GithubException
 
 token = os.environ["GITHUB_TOKEN"]
@@ -111,7 +112,8 @@ class NXP_Zephyr:
             "sumitbatra-nxp", "PetervdPerk-NXP", "bperseghetti", 
             "igalloway", "mayankmahajan-nxp", "TomasGalbickaNXP",
             "ankeXiao", "CZKikin", "CherQin", "0xFarahFl", 
-            "Rex-Chen-NXP", "MaochenWang1"], key=lambda x: x.lower())
+            "Rex-Chen-NXP", "MaochenWang1"
+            ], key=lambda x: x.lower())
 
         print(f"NXP_Zephyr: {self.NXP_Zephyr_Team}")
 
@@ -119,7 +121,9 @@ class NXP_Zephyr:
 class PRData:
     issue: github.Issue
     pr: github.PullRequest
+    repo: str = field(default=None)
     assignee: str = field(default=None)
+    approvers: set = field(default=None)
     time: bool = field(default=False)
     time_left: int = field(default=None)
     mergeable: bool = field(default=False)
@@ -148,8 +152,6 @@ def calc_biz_hours(ref, delta):
 
 
 def evaluate_criteria(number, data):
-    print(f"process: {number}")
-
     pr = data.pr
     author = pr.user.login
     labels = [l.name for l in pr.labels]
@@ -205,6 +207,7 @@ def evaluate_criteria(number, data):
         time_left = 48 - delta_biz_hours
 
     data.assignee = assignee_approved
+    data.approvers = approvers
     data.time = time_left <= 0
     data.time_left = time_left
     data.mergeable = mergeable
@@ -212,7 +215,7 @@ def evaluate_criteria(number, data):
     data.trivial = trivial
     data.change_request = change_request
 
-    data.debug = [number, author, assignees, approvers, delta_hours,
+    data.debug = [pr.number, author, assignees, approvers, delta_hours,
                   delta_biz_hours, time_left, mergeable, hotfix, trivial, 
                   change_request]
 
@@ -224,14 +227,15 @@ def table_entry(number, data):
     author = pr.user.login
     assignees = ', '.join(sorted(a.login for a in pr.assignees))
 
-    approvers_set = set()
-    for review in data.pr.get_reviews():
-        if review.user:
-            if review.state == 'APPROVED':
-                approvers_set.add(review.user.login)
-            elif review.state in ['DISMISSED', 'CHANGES_REQUESTED']:
-                approvers_set.discard(review.user.login)
-    approvers = ', '.join(sorted(approvers_set))
+    approvers_set = data.approvers
+    # approvers_set = set()
+    # for review in data.pr.get_reviews():
+        # if review.user:
+            # if review.state == 'APPROVED':
+                # approvers_set.add(review.user.login)
+            # elif review.state in ['DISMISSED', 'CHANGES_REQUESTED']:
+                # approvers_set.discard(review.user.login)
+    approvers = ', '.join(sorted(data.approvers))
 
     base = pr.base.ref
     if pr.milestone:
@@ -243,10 +247,10 @@ def table_entry(number, data):
     assignee = PASS if data.assignee else FAIL
     time = PASS if data.time else FAIL + f" {data.time_left}h left"
 
-    if data.mergeable and data.assignee and data.time:
-        tr_class = ""
-    elif data.change_request:
+    if data.change_request:
         tr_class = "change"
+    elif data.mergeable and data.assignee and data.time:
+        tr_class = ""
     else:
         tr_class = "draft"
 
@@ -261,7 +265,7 @@ def table_entry(number, data):
 
     return f"""
         <tr class="{tr_class}">
-            <td><a href="{url}">{number}</a></td>
+            <td><a href="{url}">{pr.number}</a></td>
             <td><a href="{url}">{title}</a></td>
             <td>{author}</td>
             <td>{assignees}</td>
@@ -284,10 +288,13 @@ def repo_entry(repo_name):
         """
 
 def query_repo(gh, nxp, org, repo, ignore_milestones):
-    pr_data = {}
+    pr_data = []
+
+    pattern = r"github\.com/([^/]+)/([^/]+)/"
 
     for user in nxp.NXP_Zephyr_Team:
-        query = f"is:pr is:open repo:{org}/{repo} author:{user}"
+        #query = f"is:pr is:open repo:{org}/{repo} author:{user}"
+        query = f"is:pr is:open author:{user}"
         print(query)
         
         try:
@@ -298,26 +305,29 @@ def query_repo(gh, nxp, org, repo, ignore_milestones):
                     continue
 
                 number = issue.number
-                print(f"fetch: {number}")
                 pr = issue.as_pull_request()
-                pr_data[number] = PRData(issue=issue, pr=pr)
+                matches = re.search(pattern, pr.html_url)
+                print(f"fetch: {number}, org: {matches.group(1)}, repo: {matches.group(2)}")
+                if matches.group(1) == org:
+                    pr_data.append(PRData(issue=issue, pr=pr, repo=matches.group(2)))
+                else:
+                    continue
         except Exception as e:
             if e.status== 422:
                 print(f"Can't fetch {user}! Is account private?")
             continue
 
-    print(f"Evaluate {repo} PR list")
-    for number, data in pr_data.items():
-        evaluate_criteria(number, data)
+    print("Evaluate PR list")
+    for data in pr_data:
+        evaluate_criteria(0, data)
 
     debug_headers = ["number", "author", "assignees", "approvers",
                      "delta_hours", "delta_biz_hours", "time_left", "Mergeable",
                      "Hotfix", "Trivial", "Change"]
     debug_data = []
-    for _, data in pr_data.items():
+    for data in pr_data:
         debug_data.append(data.debug)
     print(tabulate.tabulate(debug_data, headers=debug_headers))
-
 
     return pr_data
 
@@ -361,18 +371,16 @@ def main(argv):
         html_out = html_out.replace("UPDATE_TIMESTAMP", timestamp)
 
     repo_list = ["zephyr", "hal_nxp", "hostap", "mbedtls", "mcuboot", "trusted-firmware-m", "tf-m-tests", "lvgl", "west" ]
-
+    pr_data = query_repo(gh, nxp, args.org, "zephyr", ignore_milestones)
+    
     for repo in repo_list:
-        print(f"Processing repo {repo}")
-        pr_data = query_repo(gh, nxp, args.org, repo, ignore_milestones)
-        
-        if pr_data:
+        print(f"searching for {repo} PRs")
+        matching_pr_data = [pr_instance for pr_instance in pr_data if pr_instance.repo == repo]
+        if matching_pr_data:
             html_out += repo_entry(repo)
-            for number, data in pr_data.items():
-                html_out += table_entry(number, data)
-
-        pr_data = query_repo(gh, nxp, args.org, "hostap", ignore_milestones)
-
+            for pr_item in matching_pr_data:
+                html_out += table_entry(pr_item.pr.number, pr_item)
+                
     with open(HTML_POST) as f:
         html_out += f.read()
 
