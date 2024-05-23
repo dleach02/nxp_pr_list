@@ -112,7 +112,18 @@ class NXP_Zephyr:
             "sumitbatra-nxp", "PetervdPerk-NXP", "bperseghetti", 
             "igalloway", "mayankmahajan-nxp", "TomasGalbickaNXP",
             "ankeXiao", "CZKikin", "CherQin", "0xFarahFl", 
-            "Rex-Chen-NXP", "MaochenWang1"
+            "Rex-Chen-NXP", "MaochenWang1",
+            # from report
+            "JoshPPrieto",
+            "junzhuimx",
+            "LiLongNXP",
+            "michal-smola",
+            "MichalPrincNXP",
+            "neenareddi",
+            "riestmo-nxp",
+            "robert-kalmar",
+            "thochstein",
+            "valijec"
             ], key=lambda x: x.lower())
 
         print(f"NXP_Zephyr: {self.NXP_Zephyr_Team}")
