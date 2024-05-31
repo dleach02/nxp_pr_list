@@ -1,5 +1,7 @@
 </table>
 
+<h3>7 day merge count: MERGE_COUNT</h3>
+
 <p><input type="checkbox" id="autoRefreshCheckbox" onclick="refreshSave()"/><span>Refresh automatically</span></p>
 
 <p>

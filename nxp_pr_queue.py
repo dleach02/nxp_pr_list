@@ -342,6 +342,38 @@ def query_repo(gh, nxp, org, repo, ignore_milestones):
 
     return pr_data
 
+def query_merged(gh, nxp, org, from_date):
+    pr_data = []
+
+    pattern = r"github\.com/([^/]+)/([^/]+)/"
+
+    for user in nxp.NXP_Zephyr_Team:
+        query = f"is:pr is:merged author:{user} merged:>{from_date}"
+        print(query)
+        
+        try:
+            #print_rate_limit(gh, org)
+            pr_issues = gh.search_issues(query=query)
+            for issue in pr_issues:
+                if issue.milestone and issue.milestone.title in ignore_milestones:
+                    print(f"ignoring: {number} milestone={issue.milestone.title}")
+                    continue
+
+                number = issue.number
+                pr = issue.as_pull_request()
+                matches = re.search(pattern, pr.html_url)
+                print(f"fetch: {number}, org: {matches.group(1)}, repo: {matches.group(2)}")
+                if matches.group(1) == org:
+                    pr_data.append(PRData(issue=issue, pr=pr, repo=matches.group(2)))
+                else:
+                    continue
+        except Exception as e:
+            if e.status== 422:
+                print(f"Can't fetch {user}! Is account private?")
+            continue
+
+    return pr_data
+
 
 def parse_args(argv):
     parser = argparse.ArgumentParser(description=__doc__)
@@ -392,8 +424,12 @@ def main(argv):
             for pr_item in matching_pr_data:
                 html_out += table_entry(pr_item.pr.number, pr_item)
                 
+    pr_data = query_merged(gh, nxp, args.org, datetime.date.today() - datetime.timedelta(days=7))
+    print(len(pr_data))
+                
     with open(HTML_POST) as f:
         html_out += f.read()
+        html_out = html_out.replace("MERGE_COUNT", str(len(pr_data)))
 
     with open(HTML_OUT, "w") as f:
         f.write(html_out)
