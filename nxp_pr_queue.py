@@ -103,6 +103,7 @@ class NXP_Zephyr:
             "NXP-Liam-Li",
             "william-tang914",
             "trunghieulenxp",
+            "nxpadamm",
             #
             # These were on the old list but don't currently show up in the new nxp-upstream list.
             # Probably because they are submitting from their own private repository (bad)
@@ -239,13 +240,6 @@ def table_entry(number, data):
     assignees = ', '.join(sorted(a.login for a in pr.assignees))
 
     approvers_set = data.approvers
-    # approvers_set = set()
-    # for review in data.pr.get_reviews():
-        # if review.user:
-            # if review.state == 'APPROVED':
-                # approvers_set.add(review.user.login)
-            # elif review.state in ['DISMISSED', 'CHANGES_REQUESTED']:
-                # approvers_set.discard(review.user.login)
     approvers = ', '.join(sorted(data.approvers))
 
     base = pr.base.ref
