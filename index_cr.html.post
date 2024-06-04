@@ -1,0 +1,14 @@
+</table>
+
+<h3>Total: CR_COUNT</h3>
+
+<p><input type="checkbox" id="autoRefreshCheckbox" onclick="refreshSave()"/><span>Refresh automatically</span></p>
+
+<p>
+<a href='https://github.com/dleach02/nxp_pr_list/actions/workflows/update.yaml'>
+<img src='https://github.com/dleach02/nxp_pr_list/actions/workflows/update.yaml/badge.svg'>
+</a>
+</p>
+
+</body>
+</html>
