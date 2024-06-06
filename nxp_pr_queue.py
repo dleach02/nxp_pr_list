@@ -418,6 +418,7 @@ def main(argv):
 
     repo_list = ["zephyr", "hal_nxp", "hostap", "mbedtls", "mcuboot", "trusted-firmware-m", "tf-m-tests", "lvgl", "west" ]
     pr_data = query_repo(gh, nxp, args.org, "zephyr", ignore_milestones)
+    open_pr_count = len(pr_data)
     
     for repo in repo_list:
         print(f"searching for {repo} PRs")
@@ -433,6 +434,7 @@ def main(argv):
     with open(HTML_POST) as f:
         html_out += f.read()
         html_out = html_out.replace("MERGE_COUNT", str(len(pr_data)))
+        html_out = html_out.replace("OPEN_COUNT", str(open_pr_count))
 
     with open(HTML_OUT, "w") as f:
         f.write(html_out)
