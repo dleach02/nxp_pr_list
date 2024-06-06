@@ -362,10 +362,6 @@ def query_merged(gh, nxp, org, from_date):
             #print_rate_limit(gh, org)
             pr_issues = gh.search_issues(query=query)
             for issue in pr_issues:
-                if issue.milestone and issue.milestone.title in ignore_milestones:
-                    print(f"ignoring: {number} milestone={issue.milestone.title}")
-                    continue
-
                 number = issue.number
                 pr = issue.as_pull_request()
                 matches = re.search(pattern, pr.html_url)
