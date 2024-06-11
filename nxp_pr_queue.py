@@ -19,6 +19,7 @@ import github
 import os
 import sys
 import tabulate
+import csv
 import json
 import re
 from github import GithubException
@@ -245,7 +246,7 @@ def evaluate_criteria(number, data):
                   change_request]
 
 
-def table_entry(number, data):
+def table_entry(number, data, html=True):
     pr = data.pr
     url = pr.html_url
     title = pr.title
@@ -281,21 +282,31 @@ def table_entry(number, data):
         tags.append("C")
     tags_text = ' '.join(tags)
 
-    return f"""
-        <tr class="{tr_class}">
-            <td><a href="{url}">{pr.number}</a></td>
-            <td><a href="{url}">{title}</a></td>
-            <td>{author}</td>
-            <td>{assignees}</td>
-            <td>{approvers}</td>
-            <td>{base}</td>
-            <td>{milestone}</td>
-            <td>{mergeable}</td>
-            <td>{assignee}</td>
-            <td>{time}</td>
-            <td>{tags_text}</td>
-        </tr>
-        """
+    if html:
+        return f"""
+            <tr class="{tr_class}">
+                <td><a href="{url}">{pr.number}</a></td>
+                <td><a href="{url}">{title}</a></td>
+                <td>{author}</td>
+                <td>{assignees}</td>
+                <td>{approvers}</td>
+                <td>{base}</td>
+                <td>{milestone}</td>
+                <td>{mergeable}</td>
+                <td>{assignee}</td>
+                <td>{time}</td>
+                <td>{tags_text}</td>
+            </tr>
+            """
+    else:
+        return f"""{pr.number},{title},{author},{url}"""
+
+
+def table_entry_csv(data):
+    pr = data.pr
+    print(pr)
+    return { 'PR#' : pr.number, 'Title' : pr.title, 'Author' : pr.user.login, 'URL': pr.html_url }
+
 
 def repo_entry(repo_name):
     return f"""
@@ -304,6 +315,7 @@ def repo_entry(repo_name):
             <th colspan="10">{repo_name}</th>
         </tr>
         """
+
 
 def query_repo(gh, nxp, org, repo, ignore_milestones):
     pr_data = []
@@ -349,24 +361,28 @@ def query_repo(gh, nxp, org, repo, ignore_milestones):
 
     return pr_data
 
+
 def query_merged(gh, nxp, org, from_date):
     pr_data = []
 
     pattern = r"github\.com/([^/]+)/([^/]+)/"
 
     for user in nxp.NXP_Zephyr_Team:
-        query = f"is:pr is:merged author:{user} merged:>{from_date}"
+        query = f"is:pr is:merged org:{org} author:{user} merged:>{from_date}"
         print(query)
         
         try:
             #print_rate_limit(gh, org)
             pr_issues = gh.search_issues(query=query)
             for issue in pr_issues:
+                print_rate_limit(gh, org)
+
                 number = issue.number
                 pr = issue.as_pull_request()
                 matches = re.search(pattern, pr.html_url)
                 print(f"fetch: {number}, org: {matches.group(1)}, repo: {matches.group(2)}")
                 if matches.group(1) == org:
+                    print(issue)
                     pr_data.append(PRData(issue=issue, pr=pr, repo=matches.group(2)))
                 else:
                     continue
@@ -387,6 +403,13 @@ def parse_args(argv):
                         help="Github repository")
     parser.add_argument("-i", "--ignore-milestones", default="",
                         help="Comma separated list of milestones to ignore")
+    parser.add_argument("--report", action='store_true',
+                        help="generate merge report (needs -d / --date)")
+    parser.add_argument("-d", "--date", default=datetime.date.today() - datetime.timedelta(days=7),
+                        help="Comma separated list of milestones to ignore")
+    parser.add_argument("--csv", default="merge_list.csv",
+                        help="Only relevant with --report generation. Output file to store report.")
+                     
 
     return parser.parse_args(argv)
 
@@ -403,20 +426,42 @@ def main(argv):
     nxp.update(gh)
 
     pr_data = {}
+    repo_list = ["zephyr", "hal_nxp", "hostap", "mbedtls", "mcuboot", "trusted-firmware-m", "tf-m-tests", "lvgl", "west" ]
 
     if args.ignore_milestones:
         ignore_milestones = args.ignore_milestones.split(",")
         print(f"ignored milestones: {ignore_milestones}")
     else:
         ignore_milestones = []
+ 
+    if args.report:
+        print(f"generate merge report since {args.date}")
         
+        pr_data = query_merged(gh, nxp, args.org, args.date)
+        pr_list = []
+        
+        for repo in repo_list:
+            print(f"searching for {repo} PRs")
+            matching_pr_data = [pr_instance for pr_instance in pr_data if pr_instance.repo == repo]
+            if matching_pr_data:
+                for pr_item in matching_pr_data:
+                    print(pr_item)
+                    pr_list.append(table_entry_csv(pr_item))
+       
+        header_fields = ['PR#', 'Title', 'Author', 'URL']
+
+        with open(args.csv, 'w', newline='', encoding='utf-8') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=header_fields)
+            writer.writeheader()
+            writer.writerows(pr_list)
+        
+        return
         
     with open(HTML_PRE) as f:
         html_out = f.read()
         timestamp = datetime.datetime.now(UTC).strftime("%d/%m/%Y %H:%M:%S %Z")
         html_out = html_out.replace("UPDATE_TIMESTAMP", timestamp)
 
-    repo_list = ["zephyr", "hal_nxp", "hostap", "mbedtls", "mcuboot", "trusted-firmware-m", "tf-m-tests", "lvgl", "west" ]
     pr_data = query_repo(gh, nxp, args.org, "zephyr", ignore_milestones)
     open_pr_count = len(pr_data)
     
