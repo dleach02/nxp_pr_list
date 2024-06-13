@@ -324,7 +324,7 @@ def query_repo(gh, nxp, org, repo, ignore_milestones):
 
     for user in nxp.NXP_Zephyr_Team:
         #query = f"is:pr is:open repo:{org}/{repo} author:{user}"
-        query = f"is:pr is:open author:{user}"
+        query = f"is:pr is:open org:{org} author:{user}"
         print(query)
         
         try:
@@ -381,18 +381,33 @@ def query_merged(gh, nxp, org, from_date):
                 pr = issue.as_pull_request()
                 matches = re.search(pattern, pr.html_url)
                 print(f"fetch: {number}, org: {matches.group(1)}, repo: {matches.group(2)}")
-                if matches.group(1) == org:
-                    print(issue)
-                    pr_data.append(PRData(issue=issue, pr=pr, repo=matches.group(2)))
-                else:
-                    continue
+                pr_data.append(PRData(issue=issue, pr=pr, repo=matches.group(2)))
         except Exception as e:
             if e.status== 422:
                 print(f"Can't fetch {user}! Is account private?")
             continue
-
     return pr_data
 
+
+def merged_count(gh, nxp, org, from_date):
+    pr_data = []
+
+    pattern = r"github\.com/([^/]+)/([^/]+)/"
+    count = 0
+
+    for user in nxp.NXP_Zephyr_Team:
+        query = f"is:pr is:merged org:{org} author:{user} merged:>{from_date}"
+        print(query)
+        
+        try:
+            pr_issues = gh.search_issues(query=query)
+            for issues in pr_issues:
+                count += 1
+        except Exception as e:
+            if e.status== 422:
+                print(f"Can't fetch {user}! Is account private?")
+            continue
+    return count
 
 def parse_args(argv):
     parser = argparse.ArgumentParser(description=__doc__)
@@ -473,12 +488,11 @@ def main(argv):
             for pr_item in matching_pr_data:
                 html_out += table_entry(pr_item.pr.number, pr_item)
                 
-    pr_data = query_merged(gh, nxp, args.org, datetime.date.today() - datetime.timedelta(days=7))
-    print(len(pr_data))
+    merge_count = merged_count(gh, nxp, args.org, datetime.date.today() - datetime.timedelta(days=7))
                 
     with open(HTML_POST) as f:
         html_out += f.read()
-        html_out = html_out.replace("MERGE_COUNT", str(len(pr_data)))
+        html_out = html_out.replace("MERGE_COUNT", str(merge_count))
         html_out = html_out.replace("OPEN_COUNT", str(open_pr_count))
 
     with open(HTML_OUT, "w") as f:
