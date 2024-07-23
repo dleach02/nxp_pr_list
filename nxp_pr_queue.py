@@ -140,7 +140,8 @@ class NXP_Zephyr:
             "bperseghetti", 
             "igalloway", "mayankmahajan-nxp", 
             # Not on an account yet!!
-            "LaurentiuM1234"
+            "LaurentiuM1234",
+            "xavraz"
             ], key=lambda x: x.lower())
 
         print(f"NXP_Zephyr: {self.NXP_Zephyr_Team}")
