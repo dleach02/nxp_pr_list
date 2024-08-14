@@ -65,6 +65,7 @@ class NXP_Zephyr:
             # print("fallback to hardcode version")
         self.NXP_Zephyr_Team += sorted([ 
             "0xFarahFl",
+            "0xFarahFl",
             "agansari",
             "Albort12138",
             "alexandru-porosanu-nxp",
@@ -84,7 +85,9 @@ class NXP_Zephyr:
             "fengming-ye",
             "fgoucemnxp",
             "gangli02",
+            "GaofengZhangNXP",
             "George-Stefan",
+            "haduongquang",
             "hakehuang",
             "irtrukhina",
             "iuliana-prodan",
@@ -94,12 +97,14 @@ class NXP_Zephyr:
             "JoshPPrieto",
             "junzhuimx",
             "laurenpost",
+            "LaurentiuM1234",
             "LiLongNXP",
             "lucien-nxp",
             "lylezhu2012",
             "manuargue",
             "MaochenWang1",
             "MarkWangChinese",
+            "mcuxted",
             "michal-smola",
             "MichalPrincNXP",
             "mmahadevan108",
@@ -107,9 +112,12 @@ class NXP_Zephyr:
             "neenareddi",
             "NeilChen93",
             "ngphibang",
+            "nxf58150",
+            "nxf86985",
             "NXP-Liam-Li",
             "nxp-wayne",
             "PetervdPerk-NXP",
+            "Qingling-Wu",
             "quangbuitrong",
             "Radimli",
             "Rex-Chen-NXP",
@@ -125,12 +133,17 @@ class NXP_Zephyr:
             "TomasGalbickaNXP",
             "trunghieulenxp",
             "valijec",
+            "VitekST",
             "william-tang914",
+            "xavraz",
+            "xinyu0322",
+            "yangbolu1991",
             "yeaissa",
             "yvanderv",
             "zejiang0jason",
             "ZhaoxiangJin",
             "Zhiqiang-Hou",
+
             #
             # These were on the old list but don't currently show up in the new nxp-upstream list.
             # Probably because they are submitting from their own private repository (bad)
@@ -140,8 +153,7 @@ class NXP_Zephyr:
             "bperseghetti", 
             "igalloway", "mayankmahajan-nxp", 
             # Not on an account yet!!
-            "LaurentiuM1234",
-            "xavraz"
+
             ], key=lambda x: x.lower())
 
         print(f"NXP_Zephyr: {self.NXP_Zephyr_Team}")
