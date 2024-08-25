@@ -152,7 +152,9 @@ class NXP_Zephyr:
             "Lucien-Zhao", 
             "bperseghetti", 
             "igalloway", "mayankmahajan-nxp", 
+            "shrek-wang",
             # Not on an account yet!!
+            "davidmissael"
 
             ], key=lambda x: x.lower())
 
