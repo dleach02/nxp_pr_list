@@ -65,11 +65,13 @@ class NXP_Zephyr:
             # print("fallback to hardcode version")
         self.NXP_Zephyr_Team += sorted([ 
             "0xFarahFl",
-            "0xFarahFl",
             "agansari",
             "Albort12138",
             "alexandru-porosanu-nxp",
+            "alxlastur",
+            "andrisk-dev",
             "ankeXiao",
+            "axelnxp",
             "butok",
             "ChayGuo",
             "CherQin",
@@ -81,6 +83,7 @@ class NXP_Zephyr:
             "decsny",
             "DerekSnell",
             "dleach02",
+            "dpiskula-nxp",
             "EmilioCBen",
             "fengming-ye",
             "fgoucemnxp",
@@ -91,6 +94,8 @@ class NXP_Zephyr:
             "hakehuang",
             "irtrukhina",
             "iuliana-prodan",
+            "JA-NXP",
+            "jacob-wienecke-nxp",
             "JanKomarekNXP",
             "JesseSamuel",
             "JiafeiPan",
@@ -120,11 +125,13 @@ class NXP_Zephyr:
             "Qingling-Wu",
             "quangbuitrong",
             "Radimli",
+            "Raymond0225",
             "Rex-Chen-NXP",
             "riestmo-nxp",
             "robert-kalmar",
             "sanjay-yadav-nxp",
             "saurabh-nxp",
+            "shrek-wang",
             "stanislav-poboril",
             "sumitbatra-nxp",
             "SuperHeroAbner",
@@ -132,6 +139,7 @@ class NXP_Zephyr:
             "thochstein",
             "TomasGalbickaNXP",
             "trunghieulenxp",
+            "tunguyen4585",
             "valijec",
             "VitekST",
             "william-tang914",
@@ -143,16 +151,15 @@ class NXP_Zephyr:
             "zejiang0jason",
             "ZhaoxiangJin",
             "Zhiqiang-Hou",
-
+            
             #
             # These were on the old list but don't currently show up in the new nxp-upstream list.
             # Probably because they are submitting from their own private repository (bad)
             #
-            "vakulgarg", "Ursescu", "laurenpost",
+            "vakulgarg", "Ursescu", 
             "Lucien-Zhao", 
             "bperseghetti", 
             "igalloway", "mayankmahajan-nxp", 
-            "shrek-wang",
             # Not on an account yet!!
             "davidmissael"
 
