@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 #
-# Originally sourced from work by Fabio Baltieri <fabiobaltieri@google.com>. 
+# Originally sourced from work by Fabio Baltieri <fabiobaltieri@google.com>.
 # Modified to only show NXP developers.
 #
-# The work is now part of Zephyr Project here: 
+# The work is now part of Zephyr Project here:
 # https://github.com/zephyrproject-rtos/zephyr-merge-list
 #
 # Copyright 2024 Google LLC
@@ -37,6 +37,136 @@ FAIL = "<span class=blocked>&#10005;</span>"
 
 UTC = datetime.timezone.utc
 
+NXP_Zephyr_Team = [
+    # "dleach02",
+    # ]
+
+# NXP_Zephyr_Team2 = [
+
+    "0xFarahFl",
+    "abhinavnxp",
+    "agansari",
+    "Albort12138",
+    "alexandru-porosanu-nxp",
+    "alrodlim",
+    "alxlastur",
+    "andreicatalin-ilie-nxp",
+    "andrei-menzopol",
+    "andrisk-dev",
+    "ankeXiao",
+    "asellaminxp",
+    "axelnxp",
+    "butok",
+    "caiohbm",
+    "ChayGuo",
+    "CherQin",
+    "congnguyenhuu",
+    "cosmindanielradu19",
+    "Dat-NguyenDuy",
+    "dbaluta",
+    "decsny",
+    "DerekSnell",
+    "dleach02",
+    "dpiskula-nxp",
+    "EmilioCBen",
+    "fengming-ye",
+    "fgoucemnxp",
+    "flora2086",
+    "gangli02",
+    "GaofengZhangNXP",
+    "George-Stefan",
+    "haduongquang",
+    "hakehuang",
+    "irtrukhina",
+    "iuliana-prodan",
+    "jacob-wienecke-nxp",
+    "JanKomarekNXP",
+    "JA-NXP",
+    "jerryyang35",
+    "JesseSamuel",
+    "JiafeiPan",
+    "JoshPPrieto",
+    "junzhuimx",
+    "KATE-WANG-NXP",
+    "laurenpost",
+    "LaurentiuM1234",
+    "LiLongNXP",
+    "liugang-gavin",
+    "lucien-nxp",
+    "lylezhu2012",
+    "makeshi",
+    "manuargue",
+    "MaochenWang1",
+    "MarkWangChinese",
+    "mayankmahajan-nxp",
+    "McuxCIBot",
+    "mcuxted",
+    "meghana-nxp",
+    "MichalPrincNXP",
+    "michal-smola",
+    "mmahadevan108",
+    "MrVan",
+    "neenareddi",
+    "NeilChen93",
+    "NGExplorer",
+    "ngphibang",
+    "nicusorcitu",
+    "nirav-agrawal",
+    "nxf58150",
+    "nxf86985",
+    "nxf91057",
+    "NXP-Liam-Li",
+    "nxp-shelley",
+    "nxp-wayne",
+    "PetervdPerk-NXP",
+    "Qingling-Wu",
+    "quangbuitrong",
+    "Radimli",
+    "Raymond0225",
+    "Rex-Chen-NXP",
+    "riestmo-nxp",
+    "robert-kalmar",
+    "sanjay-yadav-nxp",
+    "saurabh-nxp",
+    "shrek-wang",
+    "stanislav-poboril",
+    "sumitbatra-nxp",
+    "SuperHeroAbner",
+    "sviaunxp",
+    "thochstein",
+    "Tim-Wang38",
+    "TomasGalbickaNXP",
+    "trunghieulenxp",
+    "tunguyen4585",
+    "valijec",
+    "VitekST",
+    "william-tang914",
+    "xavraz",
+    "xinyu0322",
+    "yangbolu1991",
+    "yeaissa",
+    "yvanderv",
+    "zejiang0jason",
+    "zelan-nxp",
+    "ZhaoxiangJin",
+    "Zhiqiang-Hou",
+
+    #
+    # These were on the old list but don't currently show up in the new nxp-upstream list.
+    # Probably because they are submitting from their own private repository (bad)
+    #
+    "vakulgarg", "Ursescu",
+    "Lucien-Zhao",
+    "bperseghetti",
+    "igalloway", 
+    # continue monitoring Daniel's PR
+    "danieldegrasse",
+
+    # Not on an account yet!!
+    "davidmissael"
+
+    ]
+
 class NXP_Zephyr:
     '''
         NXP ORG
@@ -47,7 +177,7 @@ class NXP_Zephyr:
         '''
         self.NXP_Zephyr_Team = []
 
-    def update(self, _gh, team_slug = "nxp-zephyr-write"):
+    def update(self, _gh, team_list = NXP_Zephyr_Team, team_slug = "nxp-zephyr-write"):
         '''
             update team members
         '''
@@ -63,107 +193,114 @@ class NXP_Zephyr:
         # except Exception as _e:
             # print(f"{_e}")
             # print("fallback to hardcode version")
-        self.NXP_Zephyr_Team += sorted([ 
-            "0xFarahFl",
-            "agansari",
-            "Albort12138",
-            "alexandru-porosanu-nxp",
-            "alxlastur",
-            "andrisk-dev",
-            "ankeXiao",
-            "axelnxp",
-            "butok",
-            "ChayGuo",
-            "CherQin",
-            "congnguyenhuu",
-            "CZKikin",
-            "danieldegrasse",
-            "Dat-NguyenDuy",
-            "dbaluta",
-            "decsny",
-            "DerekSnell",
-            "dleach02",
-            "dpiskula-nxp",
-            "EmilioCBen",
-            "fengming-ye",
-            "fgoucemnxp",
-            "gangli02",
-            "GaofengZhangNXP",
-            "George-Stefan",
-            "haduongquang",
-            "hakehuang",
-            "irtrukhina",
-            "iuliana-prodan",
-            "JA-NXP",
-            "jacob-wienecke-nxp",
-            "JanKomarekNXP",
-            "JesseSamuel",
-            "JiafeiPan",
-            "JoshPPrieto",
-            "junzhuimx",
-            "laurenpost",
-            "LaurentiuM1234",
-            "LiLongNXP",
-            "lucien-nxp",
-            "lylezhu2012",
-            "manuargue",
-            "MaochenWang1",
-            "MarkWangChinese",
-            "mcuxted",
-            "michal-smola",
-            "MichalPrincNXP",
-            "mmahadevan108",
-            "MrVan",
-            "neenareddi",
-            "NeilChen93",
-            "ngphibang",
-            "nxf58150",
-            "nxf86985",
-            "NXP-Liam-Li",
-            "nxp-wayne",
-            "PetervdPerk-NXP",
-            "Qingling-Wu",
-            "quangbuitrong",
-            "Radimli",
-            "Raymond0225",
-            "Rex-Chen-NXP",
-            "riestmo-nxp",
-            "robert-kalmar",
-            "sanjay-yadav-nxp",
-            "saurabh-nxp",
-            "shrek-wang",
-            "stanislav-poboril",
-            "sumitbatra-nxp",
-            "SuperHeroAbner",
-            "sviaunxp",
-            "thochstein",
-            "TomasGalbickaNXP",
-            "trunghieulenxp",
-            "tunguyen4585",
-            "valijec",
-            "VitekST",
-            "william-tang914",
-            "xavraz",
-            "xinyu0322",
-            "yangbolu1991",
-            "yeaissa",
-            "yvanderv",
-            "zejiang0jason",
-            "ZhaoxiangJin",
-            "Zhiqiang-Hou",
-            
-            #
-            # These were on the old list but don't currently show up in the new nxp-upstream list.
-            # Probably because they are submitting from their own private repository (bad)
-            #
-            "vakulgarg", "Ursescu", 
-            "Lucien-Zhao", 
-            "bperseghetti", 
-            "igalloway", "mayankmahajan-nxp", 
-            # Not on an account yet!!
-            "davidmissael"
+        def sort_key(x):
+            print(f"Processing element: {x}")
+            return str(x).lower()
 
-            ], key=lambda x: x.lower())
+        self.NXP_Zephyr_Team += sorted(team_list, key=lambda x: x.lower())
+        #self.NXP_Zephyr_Team += sorted(team_list, key=sort_key)
+
+        # self.NXP_Zephyr_Team += sorted([
+            # "0xFarahFl",
+            # "agansari",
+            # "Albort12138",
+            # "alexandru-porosanu-nxp",
+            # "alxlastur",
+            # "andrisk-dev",
+            # "ankeXiao",
+            # "axelnxp",
+            # "butok",
+            # "ChayGuo",
+            # "CherQin",
+            # "congnguyenhuu",
+            # "CZKikin",
+            # "danieldegrasse",
+            # "Dat-NguyenDuy",
+            # "dbaluta",
+            # "decsny",
+            # "DerekSnell",
+            # "dleach02",
+            # "dpiskula-nxp",
+            # "EmilioCBen",
+            # "fengming-ye",
+            # "fgoucemnxp",
+            # "gangli02",
+            # "GaofengZhangNXP",
+            # "George-Stefan",
+            # "haduongquang",
+            # "hakehuang",
+            # "irtrukhina",
+            # "iuliana-prodan",
+            # "JA-NXP",
+            # "jacob-wienecke-nxp",
+            # "JanKomarekNXP",
+            # "JesseSamuel",
+            # "JiafeiPan",
+            # "JoshPPrieto",
+            # "junzhuimx",
+            # "laurenpost",
+            # "LaurentiuM1234",
+            # "LiLongNXP",
+            # "lucien-nxp",
+            # "lylezhu2012",
+            # "manuargue",
+            # "MaochenWang1",
+            # "MarkWangChinese",
+            # "mcuxted",
+            # "michal-smola",
+            # "MichalPrincNXP",
+            # "mmahadevan108",
+            # "MrVan",
+            # "neenareddi",
+            # "NeilChen93",
+            # "ngphibang",
+            # "nxf58150",
+            # "nxf86985",
+            # "NXP-Liam-Li",
+            # "nxp-wayne",
+            # "PetervdPerk-NXP",
+            # "Qingling-Wu",
+            # "quangbuitrong",
+            # "Radimli",
+            # "Raymond0225",
+            # "Rex-Chen-NXP",
+            # "riestmo-nxp",
+            # "robert-kalmar",
+            # "sanjay-yadav-nxp",
+            # "saurabh-nxp",
+            # "shrek-wang",
+            # "stanislav-poboril",
+            # "sumitbatra-nxp",
+            # "SuperHeroAbner",
+            # "sviaunxp",
+            # "thochstein",
+            # "TomasGalbickaNXP",
+            # "trunghieulenxp",
+            # "tunguyen4585",
+            # "valijec",
+            # "VitekST",
+            # "william-tang914",
+            # "xavraz",
+            # "xinyu0322",
+            # "yangbolu1991",
+            # "yeaissa",
+            # "yvanderv",
+            # "zejiang0jason",
+            # "ZhaoxiangJin",
+            # "Zhiqiang-Hou",
+
+            # #
+            # # These were on the old list but don't currently show up in the new nxp-upstream list.
+            # # Probably because they are submitting from their own private repository (bad)
+            # #
+            # "vakulgarg", "Ursescu",
+            # "Lucien-Zhao",
+            # "bperseghetti",
+            # "igalloway", "mayankmahajan-nxp",
+            # # Not on an account yet!!
+            # "davidmissael"
+
+            # ], key=lambda x: x.lower())
 
         print(f"NXP_Zephyr: {self.NXP_Zephyr_Team}")
 
@@ -227,7 +364,7 @@ def evaluate_criteria(number, data):
 
     if changes:
         change_request = True
-        
+
     assignee_approved = False
 
     if (hotfix or
@@ -266,7 +403,7 @@ def evaluate_criteria(number, data):
     data.change_request = change_request
 
     data.debug = [pr.number, author, assignees, approvers, delta_hours,
-                  delta_biz_hours, time_left, mergeable, hotfix, trivial, 
+                  delta_biz_hours, time_left, mergeable, hotfix, trivial,
                   change_request]
 
 
@@ -350,7 +487,7 @@ def query_repo(gh, nxp, org, repo, ignore_milestones):
         #query = f"is:pr is:open repo:{org}/{repo} author:{user}"
         query = f"is:pr is:open org:{org} author:{user}"
         print(query)
-        
+
         try:
             pr_issues = gh.search_issues(query=query)
             for issue in pr_issues:
@@ -394,7 +531,7 @@ def query_merged(gh, nxp, org, from_date):
     for user in nxp.NXP_Zephyr_Team:
         query = f"is:pr is:merged org:{org} author:{user} merged:>{from_date}"
         print(query)
-        
+
         try:
             #print_rate_limit(gh, org)
             pr_issues = gh.search_issues(query=query)
@@ -422,7 +559,7 @@ def merged_count(gh, nxp, org, from_date):
     for user in nxp.NXP_Zephyr_Team:
         query = f"is:pr is:merged org:{org} author:{user} merged:>{from_date}"
         print(query)
-        
+
         try:
             pr_issues = gh.search_issues(query=query)
             for issues in pr_issues:
@@ -443,12 +580,16 @@ def parse_args(argv):
     parser.add_argument("-i", "--ignore-milestones", default="",
                         help="Comma separated list of milestones to ignore")
     parser.add_argument("--report", action='store_true',
-                        help="generate merge report (needs -d / --date)")
+                        help="generate csv report of current outstanding PRs")
+    parser.add_argument("--merged", action='store_true',
+                        help="generate csv merge report (needs -d / --date)")
     parser.add_argument("-d", "--date", default=datetime.date.today() - datetime.timedelta(days=7),
-                        help="Comma separated list of milestones to ignore")
-    parser.add_argument("--csv", default="merge_list.csv",
-                        help="Only relevant with --report generation. Output file to store report.")
-                     
+                        help="date value: YYYY-MM-DD format")
+    parser.add_argument("-u", "--user", default="", type=str,
+                        help="Specifiy a specific user to parse")
+    parser.add_argument("--csv", default="pr_report.csv",
+                        help="Output report file.")
+
 
     return parser.parse_args(argv)
 
@@ -462,7 +603,12 @@ def main(argv):
     print_rate_limit(gh, args.org)
 
     nxp = NXP_Zephyr()
-    nxp.update(gh)
+    if args.user == "":
+        nxp.update(gh)
+    else:
+        zork = args.user.split(',')
+        print(zork)
+        nxp.update(gh, team_list = args.user.split(','))
 
     pr_data = {}
     repo_list = ["zephyr", "hal_nxp", "hostap", "mbedtls", "mcuboot", "trusted-firmware-m", "tf-m-tests", "lvgl", "west" ]
@@ -472,13 +618,14 @@ def main(argv):
         print(f"ignored milestones: {ignore_milestones}")
     else:
         ignore_milestones = []
- 
-    if args.report:
+    print(f"date: {args.date}")
+
+    if args.merged:
         print(f"generate merge report since {args.date}")
-        
+
         pr_data = query_merged(gh, nxp, args.org, args.date)
         pr_list = []
-        
+
         for repo in repo_list:
             print(f"searching for {repo} PRs")
             matching_pr_data = [pr_instance for pr_instance in pr_data if pr_instance.repo == repo]
@@ -486,24 +633,46 @@ def main(argv):
                 for pr_item in matching_pr_data:
                     print(pr_item)
                     pr_list.append(table_entry_csv(pr_item))
-       
+
         header_fields = ['PR#', 'Title', 'Author', 'URL']
 
         with open(args.csv, 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=header_fields)
             writer.writeheader()
             writer.writerows(pr_list)
-        
+
         return
-        
+
+    # Get current list of outstanding PRs
+    pr_data = query_repo(gh, nxp, args.org, "zephyr", ignore_milestones)
+    open_pr_count = len(pr_data)
+
+    if args.report:
+        print(f"Generate {args.csv} report")
+        pr_list = []
+        for repo in repo_list:
+            print(f"searching for {repo} PRs")
+            matching_pr_data = [pr_instance for pr_instance in pr_data if pr_instance.repo == repo]
+            if matching_pr_data:
+                for pr_item in matching_pr_data:
+                    #print(pr_item)
+                    pr_list.append(table_entry_csv(pr_item))
+
+        header_fields = ['PR#', 'Title', 'Author', 'URL']
+
+        with open(args.csv, 'w', newline='', encoding='utf-8') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=header_fields)
+            writer.writeheader()
+            writer.writerows(pr_list)
+
+        return
+
+    # Generate web page dashboard
     with open(HTML_PRE) as f:
         html_out = f.read()
         timestamp = datetime.datetime.now(UTC).strftime("%d/%m/%Y %H:%M:%S %Z")
         html_out = html_out.replace("UPDATE_TIMESTAMP", timestamp)
 
-    pr_data = query_repo(gh, nxp, args.org, "zephyr", ignore_milestones)
-    open_pr_count = len(pr_data)
-    
     for repo in repo_list:
         print(f"searching for {repo} PRs")
         matching_pr_data = [pr_instance for pr_instance in pr_data if pr_instance.repo == repo]
@@ -511,9 +680,9 @@ def main(argv):
             html_out += repo_entry(repo)
             for pr_item in matching_pr_data:
                 html_out += table_entry(pr_item.pr.number, pr_item)
-                
+
     merge_count = merged_count(gh, nxp, args.org, datetime.date.today() - datetime.timedelta(days=7))
-                
+
     with open(HTML_POST) as f:
         html_out += f.read()
         html_out = html_out.replace("MERGE_COUNT", str(merge_count))
