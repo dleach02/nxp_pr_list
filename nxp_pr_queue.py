@@ -200,7 +200,7 @@ NXP_Zephyr_Team = [
     "igalloway", 
 
     # continue monitoring Daniel's PR
-    "danieldegrasse",
+    #"danieldegrasse",
 
     ]
 
