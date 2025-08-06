@@ -148,7 +148,7 @@ NXP_Zephyr_Team = [
     "nxf86985",
     "nxf91057",
     "nxp-shelley",
-    "nxp-wayne",
+    "nxp-wei-feng",
     "pavel-macenauer-nxp",
     "PetervdPerk-NXP",
     "peterwangsz",
@@ -175,6 +175,7 @@ NXP_Zephyr_Team = [
     "sumitbatra-nxp",
     "SuperHeroAbner",
     "sviaunxp",
+    "taieup-kim",
     "thochstein",
     "Tim-Wang38",
     "TomasBarakNXP",
@@ -200,7 +201,6 @@ NXP_Zephyr_Team = [
     "ZhaoxiangJin",
     "Zhiqiang-Hou",
     "ZongchunYu",
-
 
     #
     # These were on the old list but don't currently show up in the new nxp-upstream list.
