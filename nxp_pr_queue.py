@@ -209,7 +209,7 @@ NXP_Zephyr_Team = [
     "vakulgarg", "Ursescu",
     "Lucien-Zhao",
     "bperseghetti",
-    "igalloway", 
+    "igalloway",
 
     # continue monitoring Daniel's PR
     #"danieldegrasse",
@@ -453,6 +453,8 @@ def query_repo(gh, nxp, org, repo, ignore_milestones):
         except Exception as e:
             if e.status== 422:
                 print(f"Can't fetch {user}! Is account private?")
+            else:
+                print(e)
             continue
 
     print("Evaluate PR list")
@@ -517,6 +519,31 @@ def merged_count(gh, nxp, org, from_date):
             continue
     return count
 
+def parse_logins_from_csv(csv_file_path):
+    """Parse login names from CSV file with organization, login, name, email, created at, and role columns."""
+    logins = []
+    try:
+        with open(csv_file_path, 'r', newline='', encoding='utf-8') as csvfile:
+            reader = csv.DictReader(csvfile)
+
+            # Verify required column exists
+            if 'Login' not in reader.fieldnames:
+                raise ValueError("CSV file must contain a 'Login' column")
+
+            for row in reader:
+                login = row['Login'].strip()
+                if login:  # Skip empty login values
+                    logins.append(login)
+
+    except FileNotFoundError:
+        print(f"Error: CSV file '{csv_file_path}' not found")
+        return None
+    except Exception as e:
+        print(f"Error reading CSV file: {e}")
+        return None
+
+    return logins
+
 def parse_args(argv):
     parser = argparse.ArgumentParser(description=__doc__)
 
@@ -536,7 +563,8 @@ def parse_args(argv):
                         help="Specifiy a specific user to parse")
     parser.add_argument("--csv", default="pr_report.csv",
                         help="Output report file.")
-
+    parser.add_argument("--team-csv", type=str,
+                        help="CSV file containing team data with login column to use instead of hardcoded team list")
 
     return parser.parse_args(argv)
 
@@ -550,12 +578,24 @@ def main(argv):
     print_rate_limit(gh, args.org)
 
     nxp = NXP_Zephyr()
-    if args.user == "":
-        nxp.update(gh)
-    else:
+    if args.team_csv:
+        # Use CSV file
+        csv_logins = parse_logins_from_csv(args.team_csv)
+        if csv_logins is None:
+            print("Failed to parse CSV file. Exiting.")
+            return 1
+        print(f"Loaded {len(csv_logins)} logins from CSV file: {args.team_csv}")
+        #
+        # Hack for those who are not on the list but we want to track
+        #
+        csv_logins.append("bperseghetti")
+        nxp.update(gh, team_list=csv_logins)
+    elif args.user:
         zork = args.user.split(',')
         print(zork)
         nxp.update(gh, team_list = args.user.split(','))
+    else:
+        nxp.update(gh)
 
     pr_data = {}
     repo_list = ["zephyr", "hal_nxp", "hostap", "mbedtls", "mcuboot", "trusted-firmware-m", "tf-m-tests", "lvgl", "west",  ]

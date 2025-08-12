@@ -35,7 +35,7 @@ jobs:
           mkdir public
           pwd
           ls -l
-          ./nxp_pr_queue.py
+          ./nxp_pr_queue.py --team-csv org_members.csv
 
       - name: Setup pages
         uses: actions/configure-pages@v4
