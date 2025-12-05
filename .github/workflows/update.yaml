@@ -19,7 +19,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     permissions: read-all
     steps:
       - name: Install Python dependencies
@@ -51,7 +51,7 @@ jobs:
       pages: write
       id-token: write
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
